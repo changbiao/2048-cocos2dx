@@ -29,26 +29,31 @@ bool HelloWorld::init() {
 //    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this); // MYNOTE: CC_CALLBACK_2: #define CC_CALLBACK_2	(	 	__selector__, __target__, ... )
     touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,this);
+
+    return true;
 
 }
 
 //事件监听回调：触摸开始
 bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event) {
-    Point touchPoint = touch->getLocation(); //获取OpenGL坐标（即cocos2d-x坐标，原点在左下角）
-    touch->getLocationInView();
+    Vec2 touchPoint = touch->getLocation(); //获取OpenGL坐标（即cocos2d-x坐标，原点在左下角）
+    touch->getLocationInView(); // MYNOTE: getLocationInView()
     firstX = touchPoint.x;
     firstY = touchPoint.y;
+    return true;
 }
 
 //事件监听回调：触摸结束
 void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event) {
-    Point touchPoint = touch->getLocation();
+    Vec2 touchPoint = touch->getLocation();
     endX = firstX - touchPoint.x;
     endY = firstY - touchPoint.y;
 
+    log("endX: %d", abs(endX));
+    log("endY: %d", abs(endY));
     if (abs(endX) >abs(endY)) {
         if (endX + 5 > 0) {
             doLeft();
@@ -73,16 +78,16 @@ bool HelloWorld::doUp() {
 }
 
 bool HelloWorld::doDown() {
-    log("doUp");
+    log("doDown");
     return true;
 }
 
 bool HelloWorld::doLeft() {
-    log("doUp");
+    log("doLeft");
     return true;
 }
 
 bool HelloWorld::doRight() {
-    log("doUp");
+    log("doRight");
     return true;
 }

@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+#include "CardSprite.h"
 
 USING_NS_CC;
 

@@ -2,6 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "CardSprite.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -28,6 +29,7 @@ public:
     void createCardSprite(cocos2d::Size size);
 private:
     int firstX, firstY, endX, endY;
+    CardSprite* cards[4][4];
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -59,8 +59,6 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event) {
     endX = firstX - touchPoint.x;
     endY = firstY - touchPoint.y;
 
-    log("endX: %d", abs(endX));
-    log("endY: %d", abs(endY));
     if (abs(endX) >abs(endY)) {
         if (endX + 5 > 0) {
             doLeft();
@@ -81,22 +79,118 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event) {
 
 bool HelloWorld::doUp() {
     log("doUp");
-    return true;
+    bool isdo = false;
+    for (int x = 0; x < 4; x++) {
+        for (int y = 3; y >= 0; y--) {
+
+            for (int y1 = y - 1; y1 >= 0; y1--) {
+                if (cards[x][y1]->getNumber() > 0) {
+                    if (cards[x][y]->getNumber() <= 0) {
+                        cards[x][y]->setNumber(cards[x][y1]->getNumber());
+                        cards[x][y1]->setNumber(0);
+
+                        y++;
+                        isdo = true;
+                    }else if(cards[x][y]->getNumber() == cards[x][y1]->getNumber()){
+                        cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
+                        cards[x][y1]->setNumber(0);
+
+                        isdo = true;
+                    }
+                    break;
+                }
+            }
+
+        }
+    }
+    return isdo;
 }
 
 bool HelloWorld::doDown() {
     log("doDown");
-    return true;
+    bool isdo = false;
+    for (int x = 0; x < 4; x++) {
+        for (int y = 0; y < 4; y++) {
+
+            for (int y1 = y + 1; y1 < 4; y1++) {
+                if (cards[x][y1]->getNumber() > 0) {
+                    if (cards[x][y]->getNumber() <= 0) {
+                        cards[x][y]->setNumber(cards[x][y1]->getNumber());
+                        cards[x][y1]->setNumber(0);
+
+                        y--;
+                        isdo = true;
+                    }else if(cards[x][y]->getNumber() == cards[x][y1]->getNumber()){
+                        cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
+                        cards[x][y1]->setNumber(0);
+
+                        isdo = true;
+                    }
+                    break;
+                }
+            }
+
+        }
+    }
+    return isdo;
 }
 
 bool HelloWorld::doLeft() {
     log("doLeft");
-    return true;
+
+    bool isDo = false;
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            // 如果右边的数等于左边的数，那么左边的数乘以2，然后把右边的数设置为0，也就变为了空。
+            for (int x1 = x + 1; x1 < 4; x1++) {
+                if (cards[x1][y]->getNumber() > 0) {
+                    if (cards[x][y]->getNumber() <= 0) {
+                        cards[x][y]->setNumber(cards[x1][y]->getNumber());
+                        cards[x1][y]->setNumber(0);
+
+                        x--;
+                        isDo = true;
+                    }else if(cards[x][y]->getNumber() == cards[x1][y]->getNumber()){
+                        cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
+                        cards[x1][y]->setNumber(0);
+
+                        isDo = true;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    return isDo;
 }
 
 bool HelloWorld::doRight() {
     log("doRight");
-    return true;
+    bool isdo = false;
+    for (int y = 0; y < 4; y++) {
+        for (int x = 3; x >= 0; x--) {
+
+            for (int x1 = x - 1; x1 >= 0; x1--) {
+                if (cards[x1][y]->getNumber() > 0) {
+                    if (cards[x][y]->getNumber() <= 0) {
+                        cards[x][y]->setNumber(cards[x1][y]->getNumber());
+                        cards[x1][y]->setNumber(0);
+
+                        x++;
+                        isdo = true;
+                    }else if(cards[x][y]->getNumber() == cards[x1][y]->getNumber()){
+                        cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
+                        cards[x1][y]->setNumber(0);
+
+                        isdo = true;
+                    }
+                    break;
+                }
+            }
+
+        }
+    }
+    return isdo;
 }
 
 //创建卡片
@@ -105,15 +199,14 @@ void HelloWorld::createCardSprite(cocos2d::Size size)
     //求出单元格的宽度和高度
     int unitSize = (size.height-28)/4;
 
-    log("unitSize: %d", unitSize);
-
     //4*4的单元格
     for(int i=0; i<4; i++)
     {
         for(int j=0; j<4; j++)
         {
             CardSprite* card = CardSprite::createCardSprite(2, unitSize, unitSize, unitSize*i+140, unitSize*j+20);
-            this->addChild(card);
+            cards[i][j] = card;
+            addChild(card);
         }
     }
 }

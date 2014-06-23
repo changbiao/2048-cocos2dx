@@ -26,7 +26,7 @@ bool HelloWorld::init() {
         return false;
     }
 
-//    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Size visibleSize = Director::getInstance()->getVisibleSize();
 //    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     auto touchListener = EventListenerTouchOneByOne::create();
@@ -34,16 +34,22 @@ bool HelloWorld::init() {
     touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,this);
 
+    //加入游戏的背景颜色
+    auto layerColorBG = cocos2d::LayerColor::create(cocos2d::Color4B(180,170,160,255));
+    this->addChild(layerColorBG);
+
+    createCardSprite(visibleSize);
+
     return true;
 
 }
 
 //事件监听回调：触摸开始
-bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event) {
+bool HelloWorld::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
     Vec2 touchPoint = touch->getLocation(); //获取OpenGL坐标（即cocos2d-x坐标，原点在左下角）
     touch->getLocationInView(); // MYNOTE: getLocationInView()
-    firstX = touchPoint.x;
-    firstY = touchPoint.y;
+    firstX = (int) touchPoint.x;
+    firstY = (int) touchPoint.y;
     return true;
 }
 
@@ -91,4 +97,23 @@ bool HelloWorld::doLeft() {
 bool HelloWorld::doRight() {
     log("doRight");
     return true;
+}
+
+//创建卡片
+void HelloWorld::createCardSprite(cocos2d::Size size)
+{
+    //求出单元格的宽度和高度
+    int unitSize = (size.height-28)/4;
+
+    log("unitSize: %d", unitSize);
+
+    //4*4的单元格
+    for(int i=0; i<4; i++)
+    {
+        for(int j=0; j<4; j++)
+        {
+            CardSprite* card = CardSprite::createCardSprite(2, unitSize, unitSize, unitSize*i+140, unitSize*j+20);
+            this->addChild(card);
+        }
+    }
 }

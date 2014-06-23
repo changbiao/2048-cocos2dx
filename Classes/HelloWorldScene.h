@@ -25,6 +25,7 @@ public:
     bool doLeft();
     bool doRight();
 
+    void createCardSprite(cocos2d::Size size);
 private:
     int firstX, firstY, endX, endY;
 };

@@ -1,12 +1,10 @@
 #include "cocos2d.h"
 
-USING_NS_CC;
-
 #ifndef __CardSprite_H_
 #define __CardSprite_H_
 
 
-class CardSprite : public Sprite {
+class CardSprite : public cocos2d::Sprite {
 public:
     static CardSprite* createCardSprite(int numbers, int width, int height, float CardSpriteX, float CardSpriteY);
     virtual bool init();
@@ -20,11 +18,10 @@ private:
     int _number;
     void enemyInit(int numbers, int width, int height, float CardSpriteX, float CardSpriteY);
 
-    Label* labelCardNumber;
+    cocos2d::LabelTTF* labelCardNumber;
 
-    CCLayerColor* layerColorBG;
+    cocos2d::LayerColor* layerColorBG;
 
 };
-
 
 #endif //__CardSprite_H_

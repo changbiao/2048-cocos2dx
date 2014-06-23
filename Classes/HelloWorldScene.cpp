@@ -40,6 +40,10 @@ bool HelloWorld::init() {
 
     createCardSprite(visibleSize);
 
+    //创建2张自动生成卡片
+    autoCreateCardNumber();
+    autoCreateCardNumber();
+
     return true;
 
 }
@@ -74,6 +78,9 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event) {
             doUp();
         }
     }
+
+    doCheckGameOver();
+//    autoCreateCardNumber();
 }
 
 
@@ -204,9 +211,54 @@ void HelloWorld::createCardSprite(cocos2d::Size size)
     {
         for(int j=0; j<4; j++)
         {
-            CardSprite* card = CardSprite::createCardSprite(2, unitSize, unitSize, unitSize*i+140, unitSize*j+20);
+            CardSprite* card = CardSprite::createCardSprite(0, unitSize, unitSize, unitSize*i+140, unitSize*j+20);
             cards[i][j] = card;
             addChild(card);
         }
+    }
+}
+
+//自动生成卡片
+void HelloWorld::autoCreateCardNumber()
+{
+
+    int i = CCRANDOM_0_1()*4;
+    int j = CCRANDOM_0_1()*4;
+
+    //判断是否这个位置已存在卡片
+    if(cards[i][j]->getNumber() > 0)
+    {
+        log("(%d,%d): exist", i, j);
+        // autoCreateCardNumber();
+    }
+    else
+    {
+        cards[i][j]->setNumber(CCRANDOM_0_1()*10 < 1 ? 2: 4);
+        log("(%d,%d): %d", i, j, cards[i][j]);
+    }
+}
+
+//判断游戏是否还能继续
+void HelloWorld::doCheckGameOver(){
+    bool isGameOver = true;
+
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            if (cards[x][y]->getNumber() == 0||
+                    (x>0&&(cards[x][y]->getNumber() == cards[x-1][y]->getNumber()))||
+                    (x<3&&(cards[x][y]->getNumber() == cards[x+1][y]->getNumber()))||
+                    (y>0&&(cards[x][y]->getNumber() == cards[x][y-1]->getNumber()))||
+                    (y<3&&(cards[x][y]->getNumber() == cards[x][y+1]->getNumber()))) {
+                isGameOver = false;
+            }
+        }
+    }
+
+    if (isGameOver) {
+        //游戏结束，重新开始游戏
+        log("游戏结束");
+        Director::getInstance()->replaceScene(TransitionFade::create(1, HelloWorld::createScene()));
+    } else {
+        autoCreateCardNumber();
     }
 }

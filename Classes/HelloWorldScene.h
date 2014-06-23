@@ -26,7 +26,16 @@ public:
     bool doLeft();
     bool doRight();
 
+    void autoCreateCardNumber();
     void createCardSprite(cocos2d::Size size);
+    void doCheckGameOver();
+
+    //游戏总分
+    int score;
+
+    //定义显示分数的控件
+    cocos2d::LabelTTF* labelTTFCardNumber;
+
 private:
     int firstX, firstY, endX, endY;
     CardSprite* cards[4][4];

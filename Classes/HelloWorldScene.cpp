@@ -44,6 +44,18 @@ bool HelloWorld::init() {
     autoCreateCardNumber();
     autoCreateCardNumber();
 
+    //在上方加入游戏的分数
+
+    //加入“分数”label
+    auto labelTTFCardNumberName = LabelTTF::create("SCORE","HiraKakuProN-W6",80);
+    labelTTFCardNumberName->setPosition(Point(visibleSize.width/3,visibleSize.height-40));
+    addChild(labelTTFCardNumberName);
+
+    //加入具体的分数
+    labelTTFCardNumber = LabelTTF::create("0","HiraKakuProN-w6",80);
+    labelTTFCardNumber->setPosition(Point(visibleSize.width-400,visibleSize.height-50));
+    addChild(labelTTFCardNumber);
+
     return true;
 
 }
@@ -63,7 +75,7 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event) {
     endX = firstX - touchPoint.x;
     endY = firstY - touchPoint.y;
 
-    if (abs(endX) >abs(endY)) {
+    if (abs(endX) > abs(endY)) {
         if (endX + 5 > 0) {
             doLeft();
         }
@@ -102,6 +114,9 @@ bool HelloWorld::doUp() {
                         cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
                         cards[x][y1]->setNumber(0);
 
+                        //改变分数
+                        score += cards[x][y]->getNumber();
+                        labelTTFCardNumber->setString(String::createWithFormat("%i",score)->getCString());
                         isdo = true;
                     }
                     break;
@@ -131,6 +146,9 @@ bool HelloWorld::doDown() {
                         cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
                         cards[x][y1]->setNumber(0);
 
+                        //改变分数
+                        score += cards[x][y]->getNumber();
+                        labelTTFCardNumber->setString(String::createWithFormat("%i",score)->getCString());
                         isdo = true;
                     }
                     break;
@@ -161,6 +179,9 @@ bool HelloWorld::doLeft() {
                         cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
                         cards[x1][y]->setNumber(0);
 
+                        //改变分数
+                        score += cards[x][y]->getNumber();
+                        labelTTFCardNumber->setString(String::createWithFormat("%i",score)->getCString());
                         isDo = true;
                     }
                     break;
@@ -189,6 +210,9 @@ bool HelloWorld::doRight() {
                         cards[x][y]->setNumber(cards[x][y]->getNumber()*2);
                         cards[x1][y]->setNumber(0);
 
+                        //改变分数
+                        score += cards[x][y]->getNumber();
+                        labelTTFCardNumber->setString(String::createWithFormat("%i",score)->getCString());
                         isdo = true;
                     }
                     break;
@@ -204,7 +228,7 @@ bool HelloWorld::doRight() {
 void HelloWorld::createCardSprite(cocos2d::Size size)
 {
     //求出单元格的宽度和高度
-    int unitSize = (size.height-28)/4;
+    int unitSize = (size.height-100)/4;
 
     //4*4的单元格
     for(int i=0; i<4; i++)
@@ -222,20 +246,18 @@ void HelloWorld::createCardSprite(cocos2d::Size size)
 void HelloWorld::autoCreateCardNumber()
 {
 
-    int i = CCRANDOM_0_1()*4;
-    int j = CCRANDOM_0_1()*4;
+    int i, j;
 
     //判断是否这个位置已存在卡片
-    if(cards[i][j]->getNumber() > 0)
-    {
-        log("(%d,%d): exist", i, j);
-        // autoCreateCardNumber();
+    do {
+        i = CCRANDOM_0_1()*4;
+        j = CCRANDOM_0_1()*4;
     }
-    else
-    {
-        cards[i][j]->setNumber(CCRANDOM_0_1()*10 < 1 ? 2: 4);
-        log("(%d,%d): %d", i, j, cards[i][j]);
-    }
+    while (cards[i][j]->getNumber() > 0);
+
+    cards[i][j]->setNumber(CCRANDOM_0_1()*10 < 1 ? 2: 4);
+    log("(%d,%d): %d", i, j, cards[i][j]->getNumber());
+
 }
 
 //判断游戏是否还能继续
@@ -262,3 +284,4 @@ void HelloWorld::doCheckGameOver(){
         autoCreateCardNumber();
     }
 }
+
